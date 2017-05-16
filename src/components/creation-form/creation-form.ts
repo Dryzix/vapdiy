@@ -39,6 +39,12 @@ export class CreationForm {
     if(this.model.name == ''){
       this.errors.push("Vous devez spécifier un nom");
     }
+    if((this.model.baseQty == 0 || this.model.baseQty == null) &&
+        (this.model.boosterQty == 0 || this.model.boosterQty == null) &&
+        (this.model.flavourQty == 0 || this.model.flavourQty == null) &&
+        (this.model.totalQty == 0 || this.model.totalQty == null)){
+      this.errors.push("Vous devez au moins saisir une quantité");
+    }
   }
 
 }
