@@ -1,0 +1,65 @@
+<!-- Generated template for the CreationForm component -->
+<div>
+    <form (ngSubmit)="onSubmit()" #creationForm="ngForm">
+
+        <div class="error-form" [hidden]="!hasErrors">
+            <span *ngFor="let error of errors">{{ error }} <br></span>
+        </div>
+
+        <ion-list>
+            <ion-item>
+                <ion-label floating>Nom de la préparation</ion-label>
+                <ion-input type="text" [(ngModel)]="model.name" name="name"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Date de création</ion-label>
+                <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="model.date" name="date"></ion-datetime>
+            </ion-item>
+
+            <ion-item>
+                <ion-range min="0" max="100" step="10" snaps="true" [(ngModel)]="model.pg" name="pg" color="danger">
+                    <ion-icon range-left small color="danger" name="thermometer"></ion-icon>
+                    <ion-icon range-right color="danger" name="thermometer"></ion-icon>
+                </ion-range>
+            </ion-item>
+            <ion-list>
+                <ion-item>
+                    <ion-label>Nicotine</ion-label>
+                    <ion-select [(ngModel)]="model.nicotine" name="nicotine">
+                        <!--<ion-option *ngFor="let option of options" ></ion-option>-->
+                        <ion-option value="0" selected="true">0 mg</ion-option>
+                        <ion-option value="3">3 mg</ion-option>
+                        <ion-option value="6">6 mg</ion-option>
+                        <ion-option value="9">9 mg</ion-option>
+                        <ion-option value="12">12 mg</ion-option>
+                        <ion-option value="15">15 mg</ion-option>
+                        <ion-option value="18">18 mg</ion-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label floating>Quantité totale (ml)</ion-label>
+                    <ion-input type="number" [(ngModel)]="model.totalQty" name="totalQty"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label floating>Quantité base (ml)</ion-label>
+                    <ion-input type="number" [(ngModel)]="model.baseQty" name="baseQty"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label floating>Quantité booster (ml)</ion-label>
+                    <ion-input type="number" [(ngModel)]="model.boosterQty" name="boosterQty"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label floating>Quantité arôme (ml)</ion-label>
+                    <ion-input type="number" [(ngModel)]="model.flavourQty" name="flavourQty"></ion-input>
+                </ion-item>
+                <br>
+                <button ion-button type="submit">Calculer</button>
+            </ion-list>
+        </ion-list>
+    </form>
+</div>
