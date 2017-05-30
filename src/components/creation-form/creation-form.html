@@ -27,7 +27,7 @@
                 <ion-item>
                     <ion-label>Nicotine</ion-label>
                     <ion-select [(ngModel)]="model.nicotine" name="nicotine">
-                        <!--<ion-option *ngFor="let option of options" ></ion-option>-->
+                        <!--<ion-option *ngFor="let choice of nicotineChoices" ></ion-option>-->
                         <ion-option value="0" selected="true">0 mg</ion-option>
                         <ion-option value="3">3 mg</ion-option>
                         <ion-option value="6">6 mg</ion-option>
@@ -35,6 +35,20 @@
                         <ion-option value="12">12 mg</ion-option>
                         <ion-option value="15">15 mg</ion-option>
                         <ion-option value="18">18 mg</ion-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>Taux d'arôme</ion-label>
+                    <ion-select [(ngModel)]="model.aromeRate" name="aromeRate">
+                        <!--<ion-option *ngFor="let choice of nicotineChoices" ></ion-option>-->
+                        <ion-option value="10" selected="true">10 %</ion-option>
+                        <ion-option value="15">15 %</ion-option>
+                        <ion-option value="16">16 %</ion-option>
+                        <ion-option value="17">17 %</ion-option>
+                        <ion-option value="18">18 %</ion-option>
+                        <ion-option value="19">19 %</ion-option>
+                        <ion-option value="20">20 %</ion-option>
                     </ion-select>
                 </ion-item>
 

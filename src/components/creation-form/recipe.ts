@@ -4,6 +4,7 @@ export class Recipe {
         public date: string,
         public pg: number,
         public nicotine: number,
+        public aromeRate: number,
         public totalQty: number,
         public baseQty: number,
         public boosterQty: number,
