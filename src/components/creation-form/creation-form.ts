@@ -68,6 +68,12 @@ export class CreationForm {
         this.model.baseQty = this.model.totalQty - (this.model.boosterQty + this.model.flavourQty);
       }
     }
+    if((this.model.baseQty == 0 || this.model.baseQty == null) &&
+        (this.model.boosterQty == 0 || this.model.boosterQty == null) &&
+        (this.model.flavourQty == 0 || this.model.flavourQty == null) &&
+        (this.model.totalQty == 0 || this.model.totalQty == null)){
+      this.errors.push("Vous devez au moins saisir une quantité");
+    }
   }
 
 }
