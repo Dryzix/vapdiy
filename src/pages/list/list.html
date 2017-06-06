@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <button ion-item *ngFor="let recipe of recipes" (click)="itemTapped($event, recipe)">
+    <button ion-item *ngFor="let recipe of recipes, let i = index" (click)="itemTapped($event, recipe, i)">
       <ion-icon name="flask" item-left></ion-icon>
       {{recipe.name}}
       <div class="item-note" item-right>

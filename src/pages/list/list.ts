@@ -37,10 +37,11 @@ export class ListPage {
 
   }
 
-  itemTapped(event, item) {
+  itemTapped(event, item, index) {
     // That's right, we're pushing to ourselves!
     this.navCtrl.push(Creation, {
-      recipe: item
+      recipe: item,
+      index: index
     });
   }
 }

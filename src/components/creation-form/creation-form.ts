@@ -15,16 +15,16 @@ import {NativeStorage} from '@ionic-native/native-storage';
 })
 export class CreationForm {
 
-
-    text: string;
     public hasErrors: boolean;
     public errors: Array<string>;
     public model: Recipe;
+    public edit: boolean;
 
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage) {
 
         this.model = navParams.get('recipe') == undefined ? new Recipe('', (new Date().toISOString()), 50, null, null, null, null, null, null) : navParams.get('recipe');
+        this.edit = navParams.get('recipe') == undefined ? false : true;
         this.hasErrors = false;
         this.errors = [];
     }
@@ -33,11 +33,16 @@ export class CreationForm {
         this.calc();
         let recipes = [];
 
-        console.log(this.nativeStorage.keys());
-
         this.nativeStorage.getItem('recipes')
             .then(
-                data => recipes = data
+                data => recipes = data,
+                error => {
+                    this.nativeStorage.setItem('recipes', recipes)
+                        .then(
+                            () => console.log('Stored item!'),
+                            error => console.error('Error storing item', error)
+                        );
+                }
             );
 
         recipes[0] = this.model;
