@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { Recipe } from './recipe'
+import {Component} from '@angular/core';
+import {NavController, NavParams} from 'ionic-angular';
+import {Recipe} from './recipe'
+import {NativeStorage} from '@ionic-native/native-storage';
 
 /**
  * Generated class for the CreationForm component.
@@ -8,72 +10,101 @@ import { Recipe } from './recipe'
  * for more info on Angular Components.
  */
 @Component({
-  selector: 'creation-form',
-  templateUrl: 'creation-form.html'
+    selector: 'creation-form',
+    templateUrl: 'creation-form.html'
 })
 export class CreationForm {
 
 
-  text: string;
-  public hasErrors: boolean;
-  public errors: Array<string>;
-  public model: Recipe;
+    text: string;
+    public hasErrors: boolean;
+    public errors: Array<string>;
+    public model: Recipe;
 
 
-  constructor() {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage) {
 
-    this.model = new Recipe('', (new Date().toISOString()), 50, null, null, null, null, null, null);
-    this.hasErrors = false;
-    this.errors = [];
-
-    console.log('Hello CreationForm Component');
-    this.text = 'Hello World';
-  }
-
-  onSubmit() {
-
-    this.hasErrors = false;
-    this.errors = [];
-
-    console.log(this.model);
-
-    if(this.model.name == ''){
-      this.errors.push("Vous devez spécifier un nom");
-      this.hasErrors = true;
+        this.model = navParams.get('recipe') == undefined ? new Recipe('', (new Date().toISOString()), 50, null, null, null, null, null, null) : navParams.get('recipe');
+        this.hasErrors = false;
+        this.errors = [];
     }
 
-    if(this.model.nicotine == null){
-      this.errors.push("Vous devez choisir une quantitée de nicotine");
-      this.hasErrors = true;
+    onSubmit() {
+        this.calc();
+        let recipes = [];
+
+        console.log(this.nativeStorage.keys());
+
+        this.nativeStorage.getItem('recipes')
+            .then(
+                data => recipes = data
+            );
+
+        recipes[0] = this.model;
+
+        this.nativeStorage.setItem('recipes', recipes)
+            .then(
+                () => console.log('Stored item!'),
+                error => console.error('Error storing item', error)
+            );
+
+        this.nativeStorage.getItem('recipes')
+            .then(
+                data => console.log(data, data.length),
+                error => console.error(error)
+            );
+
+        if (!this.hasErrors) {
+
+        }
     }
 
-    if(this.model.aromeRate == null){
-      this.errors.push("Vous devez choisir un taux d'arôme");
-      this.hasErrors = true;
+    calc() {
+
+        this.check();
+
+        if (!this.hasErrors) {
+            if (this.model.totalQty != null) {
+                this.model.boosterQty = this.model.totalQty * this.model.nicotine / 20;
+                this.model.flavourQty = this.model.totalQty * this.model.aromeRate / 100;
+                this.model.baseQty = this.model.totalQty - (this.model.boosterQty + this.model.flavourQty);
+            }
+        }
     }
 
-    if(this.model.totalQty == null &&
-        this.model.baseQty == null &&
-        this.model.boosterQty == null &&
-        this.model.flavourQty == null){
-      this.errors.push("Vous devez saisir au moins une quantité");
-      this.hasErrors = true;
-    }
+    check() {
+        this.hasErrors = false;
+        this.errors = [];
 
+        if (this.model.name == '') {
+            this.errors.push("Vous devez spécifier un nom");
+            this.hasErrors = true;
+        }
 
-    if(!this.hasErrors){
-      if(this.model.totalQty != null){
-        this.model.boosterQty = this.model.totalQty * this.model.nicotine / 20;
-        this.model.flavourQty = this.model.totalQty * this.model.aromeRate / 100;
-        this.model.baseQty = this.model.totalQty - (this.model.boosterQty + this.model.flavourQty);
-      }
+        if (this.model.nicotine == null) {
+            this.errors.push("Vous devez choisir une quantitée de nicotine");
+            this.hasErrors = true;
+        }
+
+        if (this.model.aromeRate == null) {
+            this.errors.push("Vous devez choisir un taux d'arôme");
+            this.hasErrors = true;
+        }
+
+        if (this.model.totalQty == null &&
+            this.model.baseQty == null &&
+            this.model.boosterQty == null &&
+            this.model.flavourQty == null) {
+            this.errors.push("Vous devez saisir au moins une quantité");
+            this.hasErrors = true;
+        }
+
+        if ((this.model.baseQty == 0 || this.model.baseQty == null) &&
+            (this.model.boosterQty == 0 || this.model.boosterQty == null) &&
+            (this.model.flavourQty == 0 || this.model.flavourQty == null) &&
+            (this.model.totalQty == 0 || this.model.totalQty == null)) {
+            this.errors.push("Vous devez au moins saisir une quantité");
+        }
     }
-    if((this.model.baseQty == 0 || this.model.baseQty == null) &&
-        (this.model.boosterQty == 0 || this.model.boosterQty == null) &&
-        (this.model.flavourQty == 0 || this.model.flavourQty == null) &&
-        (this.model.totalQty == 0 || this.model.totalQty == null)){
-      this.errors.push("Vous devez au moins saisir une quantité");
-    }
-  }
 
 }

@@ -72,7 +72,9 @@
                     <ion-input type="number" [(ngModel)]="model.flavourQty" name="flavourQty"></ion-input>
                 </ion-item>
                 <br>
-                <button ion-button type="submit">Calculer</button>
+                <button ion-button type="button" (click)='calc();'>Calculer</button>
+                <button ion-button color="secondary" type="submit">Enregistrer</button>
+
             </ion-list>
         </ion-list>
     </form>

@@ -13,8 +13,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'creation.html',
 })
 export class Creation {
+  action: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.action = navParams.get('recipe') == undefined ? 'Création' : 'Modification';
   }
 
   ionViewDidLoad() {
