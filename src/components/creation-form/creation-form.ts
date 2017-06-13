@@ -1,7 +1,9 @@
 import {Component} from '@angular/core';
+import {Platform} from 'ionic-angular';
 import {NavController, NavParams} from 'ionic-angular';
 import {Recipe} from './recipe'
 import {NativeStorage} from '@ionic-native/native-storage';
+import {LocalNotifications} from '@ionic-native/local-notifications';
 
 /**
  * Generated class for the CreationForm component.
@@ -15,22 +17,26 @@ import {NativeStorage} from '@ionic-native/native-storage';
 })
 export class CreationForm {
 
-    public hasErrors: boolean;
+    private hasErrors: boolean;
     public errors: Array<string>;
     public model: Recipe;
-    public edit: boolean;
+    private edit: boolean;
+    private index: number;
+    private notif: LocalNotifications;
+    private platform: Platform;
 
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage,
+                private localNotifications: LocalNotifications, public plt: Platform) {
 
+        this.platform = plt;
+        this.notif = localNotifications;
         this.model = navParams.get('recipe') == undefined ? new Recipe('', (new Date().toISOString()), 50, null, null, null, null, null, null) : navParams.get('recipe');
         this.edit = navParams.get('recipe') == undefined ? false : true;
+        this.index = navParams.get('index');
         this.hasErrors = false;
         this.errors = [];
-    }
 
-    onSubmit() {
-        this.calc();
         let recipes = [];
 
         this.nativeStorage.getItem('recipes')
@@ -44,8 +50,16 @@ export class CreationForm {
                         );
                 }
             );
+    }
 
-        recipes[0] = this.model;
+    submit(recipes) {
+
+        if (this.edit) {
+            recipes[this.index] = this.model;
+        } else {
+            recipes.push(this.model);
+        }
+
 
         this.nativeStorage.setItem('recipes', recipes)
             .then(
@@ -62,6 +76,28 @@ export class CreationForm {
         if (!this.hasErrors) {
 
         }
+    }
+
+    onSubmit() {
+        this.calc();
+        let recipes = [];
+
+        this.nativeStorage.getItem('recipes')
+            .then(
+                data => {
+                    this.submit(data);
+                    this.localNotifications.schedule({
+                        title: 'VapDIY',
+                        text: 'Test',
+                        at: new Date(new Date().getTime() + 10),
+                        led: 'FF0000',
+                        sound: this.platform.is('android') ? 'file://coins.mp3' : 'file://coins.m4r',
+                    });
+                },
+                error => {
+                    this.submit([]);
+                }
+            );
     }
 
     calc() {
